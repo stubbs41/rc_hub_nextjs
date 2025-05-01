@@ -1,52 +1,27 @@
-'use client'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Plus } from 'lucide-react'
-import { useEffect, useOptimistic, useState, useTransition } from 'react'
-import { getStats, incrementAndLog } from './counter'
+
+"use client";
+
+import AuthForm from "@/components/AuthForm";
 
 export default function Home() {
-  const [stats, setStats] = useState<{ count: number; recentAccess: { accessed_at: string }[] }>({
-    count: 0,
-    recentAccess: []
-  })
-  const [optimisticStats, setOptimisticStats] = useOptimistic(stats)
-  const [_, startTransition] = useTransition()
-
-  useEffect(() => {
-    getStats().then(setStats)
-  }, [])
-
-  const handleClick = async () => {
-    startTransition(async () => {
-      setOptimisticStats({
-        count: optimisticStats.count + 1,
-        recentAccess: [{ accessed_at: new Date().toISOString() }, ...optimisticStats.recentAccess.slice(0, 4)]
-      })
-      const newStats = await incrementAndLog()
-      setStats(newStats)
-    })
-  }
-
   return (
-    <main className="flex min-h-screen items-center justify-center p-8 sm:p-24">
-      <Card className="p-6 sm:p-8 w-full max-w-sm">
-        <p className="text-2xl font-medium text-center mb-4">Views: {optimisticStats.count}</p>
-        <div className="flex justify-center mb-4">
-          <Button onClick={handleClick}>
-            <Plus className="h-4 w-4 mr-2" />
-            Increment
-          </Button>
-        </div>
-        <ScrollArea className="h-[100px]">
-          {optimisticStats.recentAccess.map((log, i) => (
-            <div key={i} className="text-sm text-muted-foreground text-center">
-              {new Date(log.accessed_at).toLocaleString()}
-            </div>
-          ))}
-        </ScrollArea>
-      </Card>
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/90">
+          RC Hub (Next.js Version)
+        </p>
+        {/* Placeholder for potential future header elements */}
+      </div>
+
+      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[""] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[""] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
+        {/* Placeholder for potential central content */}
+      </div>
+
+      {/* Integrate AuthForm */}
+      <AuthForm />
+
+      {/* Placeholder for potential future footer elements */}
     </main>
-  )
+  );
 }
+
