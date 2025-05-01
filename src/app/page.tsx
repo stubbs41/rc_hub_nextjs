@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { Session } from "@supabase/supabase-js";
 import AuthForm from "@/components/AuthForm";
-import VehicleList from "@/components/VehicleList"; // Import VehicleList
+import VehicleList from "@/components/VehicleList";
+import PartList from "@/components/PartList"; // Import PartList
 
 export default function Home() {
   const [session, setSession] = useState<Session | null>(null);
@@ -51,8 +52,10 @@ export default function Home() {
                     Sign out
                 </button>
             </div>
-            {/* Render VehicleList when logged in */}
+            {/* Render VehicleList */}
             <VehicleList />
+            {/* Render PartList below VehicleList */}
+            <PartList />
           </div>
         )}
       </div>
