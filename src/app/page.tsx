@@ -1,26 +1,61 @@
-
 "use client";
 
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
+import { Session } from "@supabase/supabase-js";
 import AuthForm from "@/components/AuthForm";
+import VehicleList from "@/components/VehicleList"; // Import VehicleList
 
 export default function Home() {
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setLoading(false);
+    });
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+        setLoading(false);
+      }
+    );
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+
+  if (loading) {
+    return <p>Loading...</p>; // Show a loading indicator
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/90">
+    <main className="flex min-h-screen flex-col items-center p-4 md:p-8 lg:p-12">
+      <div className="w-full max-w-6xl">
+        <h1 className="text-3xl font-bold mb-6 text-center">
           RC Hub (Next.js Version)
-        </p>
-        {/* Placeholder for potential future header elements */}
+        </h1>
+        {!session ? (
+          <AuthForm />
+        ) : (
+          <div>
+            <div className="flex justify-between items-center mb-4">
+                <p>Welcome, {session.user.email}</p>
+                <button
+                    onClick={() => supabase.auth.signOut()}
+                    className="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                    Sign out
+                </button>
+            </div>
+            {/* Render VehicleList when logged in */}
+            <VehicleList />
+          </div>
+        )}
       </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[""] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[""] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        {/* Placeholder for potential central content */}
-      </div>
-
-      {/* Integrate AuthForm */}
-      <AuthForm />
-
-      {/* Placeholder for potential future footer elements */}
     </main>
   );
 }
