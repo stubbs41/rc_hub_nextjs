@@ -6,7 +6,8 @@ import { Session } from "@supabase/supabase-js";
 import AuthForm from "@/components/AuthForm";
 import VehicleList from "@/components/VehicleList";
 import PartList from "@/components/PartList";
-import DiagramList from "@/components/DiagramList"; // Import DiagramList
+import DiagramList from "@/components/DiagramList";
+import DiagnosticRequestList from "@/components/DiagnosticRequestList"; // Import DiagnosticRequestList
 
 export default function Home() {
   const [session, setSession] = useState<Session | null>(null);
@@ -59,6 +60,8 @@ export default function Home() {
             <PartList />
             {/* Render DiagramList */}
             <DiagramList />
+            {/* Render DiagnosticRequestList */}
+            <DiagnosticRequestList />
           </div>
         )}
       </div>
